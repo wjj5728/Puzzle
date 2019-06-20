@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="puzzle"></div>
+    <div class="step">步数：200</div>
+  </body>
+  <script src="./build/puzzle.js"></script>
+  <script>
+    var stepT = document.querySelector(".step");
+    var a = new Puzzle({
+      id: "puzzle",
+      width: 332,
+      height: 268,
+      imgUrl: "http://f1.img4399.com/box~cp/hd/2019/06/19/13_LXSsWH.416x336.png?t=1560923168",
+      limitNum: 200,
+      every: function(step) {
+        console.log(step);
+        stepT.innerText = "步数：" + step;
+      },
+      success: function() {},
+      fail: function() {
+        console.log("fail");
+        a.recovery();
+      }
+    });
+  </script>
+</html>

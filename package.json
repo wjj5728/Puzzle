@@ -1,0 +1,22 @@
+{
+  "name": "puzzle",
+  "version": "1.0.0",
+  "description": "canvas puzzle",
+  "author": "wjj5728",
+  "main": "rollup.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c rollup.config.js",
+    "dev": "rollup -w -c rollup.config.js"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.0.3",
+    "rollup-plugin-uglify": "^6.0.2"
+  }
+}

@@ -1,6 +1,5 @@
 class Puzzle {
   constructor(option) {
-    console.log(123);
     if (!option.id || !option.imgUrl || !option.width || !option.height) {
       return new Error("option不全");
     }
@@ -16,43 +15,43 @@ class Puzzle {
   }
   init(option) {
     var wrap = document.getElementById(option.id);
-    var canvas = document.createElement("canvas");
+    var canvas = (this.canvas = document.createElement("canvas"));
     canvas.className = "puzzle";
     canvas.width = option.width;
     canvas.height = option.height;
     wrap.appendChild(canvas);
-    var ctx = canvas.getContext("2d");
-    var image = new Image();
-    var arr = [];
-    var indexArr = [];
-    var initArr = [];
-    var initIndex = [];
-    var Row = 3; /* 行 */
-    var Column = 3; /* 列 */
-    var IWidth;
-    var IHeight;
-    var PerCol;
-    var PerRow;
-    var CWidth = canvas.width;
-    var CHeight = canvas.height;
+    var ctx = (this.ctx = canvas.getContext("2d"));
+    var image = (this.image = new Image());
+    this.arr = [];
+    this.indexArr = [];
+    this.initArr = [];
+    this.initIndex = [];
+    this.Row = 3; /* 行 */
+    this.Column = 3; /* 列 */
+    this.IWidth;
+    this.IHeight;
+    this.PerCol;
+    this.PerRow;
+    this.CWidth = canvas.width;
+    this.CHeight = canvas.height;
 
-    image.onload = function() {
-      IWidth = image.width;
-      IHeight = image.height;
-      for (var i = 0; i < Row; i++) {
-        for (var j = 0; j < Column; j++) {
-          arr.push([j, i]);
-          initIndex.push(j + i * Row);
+    image.onload = () => {
+      this.IWidth = image.width;
+      this.IHeight = image.height;
+      for (var i = 0; i < this.Row; i++) {
+        for (var j = 0; j < this.Column; j++) {
+          this.arr.push([j, i]);
+          this.initIndex.push(j + i * this.Row);
         }
       }
-      initArr = JSON.parse(JSON.stringify(arr));
-      PerCol = IWidth / Column;
-      PerRow = IHeight / Row;
-      arr.sort(function() {
+      this.initArr = JSON.parse(JSON.stringify(this.arr));
+      this.PerCol = this.IWidth / this.Column;
+      this.PerRow = this.IHeight / this.Row;
+      this.arr.sort(function() {
         return Math.random() - 0.5;
       });
-      render();
-      getIndexArr();
+      this.render();
+      this.getIndexArr();
     };
     image.src = option.imgUrl;
     canvas.addEventListener("click", e => {
@@ -63,21 +62,21 @@ class Puzzle {
         ty = ey - rect.top - document.documentElement.clientTop;
       tx = (tx * canvas.width) / rect.width;
       ty = (ty * canvas.height) / rect.height;
-      var clickIndex = getIndex(tx, ty);
-      var blanckIndex = indexArr.indexOf(arr.length - 1);
-      var click = initArr[clickIndex];
-      var blank = initArr[blanckIndex];
-      var dis = distance(click, blank);
+      var clickIndex = this.getIndex(tx, ty);
+      var blanckIndex = this.indexArr.indexOf(this.arr.length - 1);
+      var click = this.initArr[clickIndex];
+      var blank = this.initArr[blanckIndex];
+      var dis = this.distance(click, blank);
       if (dis == 1) {
         if (this.step == 0) {
           return;
         }
-        swapArr(clickIndex, blanckIndex);
-        render();
-        getIndexArr();
+        this.swapArr(clickIndex, blanckIndex);
+        this.render();
+        this.getIndexArr();
         this.step -= 1;
         option.every && option.every(this.step);
-        if (indexArr.join("") == initIndex.join("")) {
+        if (this.indexArr.join("") == this.initIndex.join("")) {
           console.log("完成");
           option.success && option.success();
         } else {
@@ -87,40 +86,55 @@ class Puzzle {
         }
       }
     });
-    function getIndex(x, y) {
-      var Y = Math.floor(y / (CHeight / Row));
-      var X = Math.floor(x / (CWidth / Column));
-      var len = X + Y * Row;
-      return len;
+  }
+  getIndex(x, y) {
+    var Y = Math.floor(y / (this.CHeight / this.Row));
+    var X = Math.floor(x / (this.CWidth / this.Column));
+    var len = X + Y * this.Row;
+    return len;
+  }
+  getIndexArr() {
+    var Iarr = [];
+    for (var i = 0; i < this.arr.length; i++) {
+      Iarr.push(this.arr[i][0] + this.arr[i][1] * this.Row);
     }
-    function getIndexArr() {
-      var Iarr = [];
-      for (var i = 0; i < arr.length; i++) {
-        Iarr.push(arr[i][0] + arr[i][1] * Row);
-      }
-      indexArr = Iarr;
-    }
-    function swapArr(index1, index2) {
-      arr[index1] = arr.splice(index2, 1, arr[index1])[0];
-    }
-    function distance(click, blank) {
-      return Math.abs(click[0] - blank[0]) + Math.abs(click[1] - blank[1]);
-    }
-    function render() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      /* 解决部分安卓机 无法清除画板 导致重叠问题 */
-      canvas.style.display = "none";
-      canvas.offsetHeight;
-      canvas.style.display = "inherit";
-      for (var i = 0; i < arr.length; i++) {
-        var element = arr[i];
-        var iRow = Math.ceil((i + 1) / Row) - 1;
-        var iCol = i % Row;
-        ctx.drawImage(image, PerCol * element[0], PerRow * element[1], IWidth / Column, IHeight / Row, (CWidth / Column) * iCol, (CHeight / Row) * iRow, CWidth / Column, CHeight / Row);
-      }
+    this.indexArr = Iarr;
+  }
+  swapArr(index1, index2) {
+    this.arr[index1] = this.arr.splice(index2, 1, this.arr[index1])[0];
+  }
+  distance(click, blank) {
+    return Math.abs(click[0] - blank[0]) + Math.abs(click[1] - blank[1]);
+  }
+  render() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    /* 解决部分安卓机 无法清除画板 导致重叠问题 */
+    this.canvas.style.display = "none";
+    this.canvas.offsetHeight;
+    this.canvas.style.display = "inherit";
+    for (var i = 0; i < this.arr.length; i++) {
+      var element = this.arr[i];
+      var iRow = Math.ceil((i + 1) / this.Row) - 1;
+      var iCol = i % this.Row;
+      this.ctx.drawImage(
+        this.image,
+        this.PerCol * element[0],
+        this.PerRow * element[1],
+        this.IWidth / this.Column,
+        this.IHeight / this.Row,
+        (this.CWidth / this.Column) * iCol,
+        (this.CHeight / this.Row) * iRow,
+        this.CWidth / this.Column,
+        this.CHeight / this.Row
+      );
     }
   }
   recovery() {
+    this.arr.sort(function() {
+      return Math.random() - 0.5;
+    });
+    this.render();
+    this.getIndexArr();
     this.step = this.option.limitNum;
   }
 }

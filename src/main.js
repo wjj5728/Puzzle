@@ -4,7 +4,7 @@ class Puzzle {
       return new Error("option不全");
     }
     let initOption = {
-      limitNum: 20
+      limitNum: 200
     };
     for (const key in option) {
       initOption[key] = option[key];
@@ -16,7 +16,7 @@ class Puzzle {
   init(option) {
     var wrap = document.getElementById(option.id);
     var canvas = (this.canvas = document.createElement("canvas"));
-    canvas.className = "puzzle";
+    canvas.className = "canvas-puzzle";
     canvas.width = option.width;
     canvas.height = option.height;
     wrap.appendChild(canvas);
@@ -56,6 +56,7 @@ class Puzzle {
     };
     image.src = option.imgUrl;
     canvas.addEventListener("click", e => {
+      if (this.isFinish) return;
       var ex = e.clientX,
         ey = e.clientY,
         rect = canvas.getBoundingClientRect(),
@@ -78,7 +79,6 @@ class Puzzle {
         this.step -= 1;
         option.every && option.every(this.step);
         if (this.indexArr.join("") == this.initIndex.join("")) {
-          console.log("完成");
           option.success && option.success();
         } else {
           if (this.step <= 0) {

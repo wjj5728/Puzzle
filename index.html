@@ -13,21 +13,34 @@
       canvas {
         margin: 0 auto;
       }
-      .step {
+      .step,
+      #vip,
+      #again {
         text-align: center;
+      }
+      #vip,
+      #again {
+        width: 100px;
+        height: 20px;
+        border-radius: 5px;
+        border: 1px solid rgb(49, 48, 48);
+        color: rgb(49, 48, 48);
+        margin: 20px auto;
       }
     </style>
   </head>
   <body>
     <div id="puzzle"></div>
-    <div class="step">步数：200</div>
-    <div id="vip">VIP</div>
+    <div class="step">步数：10</div>
+    <div id="vip">一键完成</div>
+    <div id="again">重新开始</div>
   </body>
   <script src="./build/puzzle.js"></script>
   <script>
     var stepT = document.querySelector(".step");
     var vip = document.getElementById("vip");
-    var a = new Puzzle({
+    var again = document.getElementById("again");
+    var instance = new Puzzle({
       id: "puzzle",
       // width: 332,
       // height: 268,
@@ -36,20 +49,23 @@
       imgUrl: "http://f1.img4399.com/box~cp/hd/2019/08/28/14_tR8ljA.500x500.jpg?t=1566972675",
       // imgUrl: "http://f1.img4399.com/box~cp/hd/2019/06/19/13_LXSsWH.416x336.png?t=1560923168",
       // imgUrl: "http://f1.img4399.com/box~cp/hd/2019/08/28/11_2gawY8.138x138.png?t=1566961342",
-      limitNum: 200,
+      limitNum: 10,
       every: function(step) {
         stepT.innerText = "步数：" + step;
       },
       success: function() {
-        console.log("finish");
+        alert("喜提马尔代夫旅游");
       },
       fail: function() {
-        console.log("fail");
+        alert("错误马尔代夫旅游");
         a.recovery();
       }
     });
     vip.addEventListener("click", function() {
-      a.vip();
+      instance.vip();
+    });
+    again.addEventListener("click", function() {
+      instance.recovery();
     });
   </script>
 </html>

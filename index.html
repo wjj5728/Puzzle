@@ -10,30 +10,46 @@
         padding: 0;
         margin: 0;
       }
+      canvas {
+        margin: 0 auto;
+      }
+      .step {
+        text-align: center;
+      }
     </style>
   </head>
   <body>
     <div id="puzzle"></div>
     <div class="step">步数：200</div>
+    <div id="vip">VIP</div>
   </body>
   <script src="./build/puzzle.js"></script>
   <script>
     var stepT = document.querySelector(".step");
+    var vip = document.getElementById("vip");
     var a = new Puzzle({
       id: "puzzle",
-      width: 332,
-      height: 268,
-      imgUrl: "http://f1.img4399.com/box~cp/hd/2019/06/19/13_LXSsWH.416x336.png?t=1560923168",
-      limitNum: 5,
+      // width: 332,
+      // height: 268,
+      width: 300,
+      height: 300,
+      imgUrl: "http://f1.img4399.com/box~cp/hd/2019/08/28/14_tR8ljA.500x500.jpg?t=1566972675",
+      // imgUrl: "http://f1.img4399.com/box~cp/hd/2019/06/19/13_LXSsWH.416x336.png?t=1560923168",
+      // imgUrl: "http://f1.img4399.com/box~cp/hd/2019/08/28/11_2gawY8.138x138.png?t=1566961342",
+      limitNum: 200,
       every: function(step) {
-        console.log(step);
         stepT.innerText = "步数：" + step;
       },
-      success: function() {},
+      success: function() {
+        console.log("finish");
+      },
       fail: function() {
         console.log("fail");
         a.recovery();
       }
+    });
+    vip.addEventListener("click", function() {
+      a.vip();
     });
   </script>
 </html>
